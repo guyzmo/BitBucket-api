@@ -58,6 +58,8 @@ class Repository(object):
             return (response[0], response[1]['repositories'])
         except TypeError:
             pass
+        except KeyError:
+            pass
         return response
 
     def all(self):

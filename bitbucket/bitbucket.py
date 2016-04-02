@@ -278,6 +278,8 @@ class Bitbucket(object):
             return (response[0], response[1]['user'])
         except TypeError:
             pass
+        except KeyError:
+            pass
         return response
 
     def get_tags(self, repo_slug=None):

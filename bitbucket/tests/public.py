@@ -114,7 +114,9 @@ class BitbucketAnnonymousMethodsTest(AnonymousBitbucketTest):
         self.bb.username = None
         success, result = self.bb.get_user()
         self.assertFalse(success)
-        self.assertEqual(result, 'Service not found.')
+        self.assertEqual(result['message'], 'Service not found')
+        self.assertEqual(result['reason'], 'NOT FOUND')
+        self.assertEqual(result['code'], 404)
 
     def test_get_public_repos(self):
         """ Test public_repos on specific user."""
@@ -134,7 +136,9 @@ class BitbucketAnnonymousMethodsTest(AnonymousBitbucketTest):
         self.bb.username = None
         success, result = self.bb.repository.public()
         self.assertFalse(success)
-        self.assertEqual(result, 'Service not found.')
+        self.assertEqual(result['message'], 'Service not found')
+        self.assertEqual(result['reason'], 'NOT FOUND')
+        self.assertEqual(result['code'], 404)
 
 if __name__ == "__main__":
     unittest.main()
