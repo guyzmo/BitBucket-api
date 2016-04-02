@@ -70,11 +70,12 @@ class Repository(object):
             pass
         return response
 
-    def get(self, repo_slug=None):
+    def get(self, user=None, repo_slug=None):
         """ Get a single repository on Bitbucket and return it."""
+        username = user or self.bitbucket.username
         repo_slug = repo_slug or self.bitbucket.repo_slug or ''
-        url = self.bitbucket.url('GET_REPO', username=self.bitbucket.username, repo_slug=repo_slug)
-        return self.bitbucket.dispatch('GET', url, auth=self.bitbucket.auth)
+        url = self.url('GET_REPO', username=username, repo_slug=repo_slug)
+        return self.dispatch('GET', url, auth=self.bitbucket.auth)
 
     def create(self, repo_name, scm='git', private=True, **kwargs):
         """ Creates a new repository on own Bitbucket account and return it."""
