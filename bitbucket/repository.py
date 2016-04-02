@@ -6,6 +6,7 @@ from zipfile import ZipFile
 URLS = {
     'CREATE_REPO': 'repositories/',
     'GET_REPO': 'repositories/%(username)s/%(repo_slug)s/',
+    'FORK_REPO' : 'repositories/%(username)s/%(repo_slug)s/fork',
     'UPDATE_REPO': 'repositories/%(username)s/%(repo_slug)s/',
     'DELETE_REPO': 'repositories/%(username)s/%(repo_slug)s/',
     # Get archive
@@ -112,3 +113,9 @@ class Repository(object):
                         zip_archive.write(temp_file.name, prefix + name)
             return (True, archive.name)
         return (False, 'Could not archive your project.')
+
+    def fork(self, user, repo_slug, new_name=None):
+        url = self.url('FORK_REPO', username=user, repo_slug=repo_slug)
+        new_repo = new_name or repo_slug
+        return self.dispatch('POST', url, name=new_repo, auth=self.auth)
+
