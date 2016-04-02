@@ -243,12 +243,20 @@ class Bitbucket(object):
                 False,
                 'Unauthorized access, '
                 'please check your credentials.')
-        elif status >= 400 and status < 500:
-            return (False, 'Service not found.')
+        elif status == 404:
+            return (False, dict(message='Service not found', reason=error, code=status))
+        elif status == 400:
+            return (False, dict(message='Bad request sent to server.', reason=error, code=status))
+        elif status == 401:
+            return (False, dict(message='Not enough privileges.', reason=error, code=status))
+        elif status == 403:
+            return (False, dict(message='Not authorized.', reason=error, code=status))
+        elif status == 402 or status >= 405:
+            return (False, dict(message='Request error.', reason=error, code=status))
         elif status >= 500 and status < 600:
-                return (False, 'Server error.')
+                return (False, dict(message='Server error.', reason=error, code=status))
         else:
-            return (False, error)
+            return (False, dict(message='Unidentified error.', reason=error, code=status))
 
     def url(self, action, **kwargs):
         """ Construct and return the URL for a specific API service. """
