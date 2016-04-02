@@ -63,6 +63,8 @@ class Bitbucket(object):
         self.consumer_secret = None
         self.oauth = None
 
+        self.session = Session()
+
     #  ===================
     #  = Getters/Setters =
     #  ===================
@@ -156,7 +158,7 @@ class Bitbucket(object):
                 consumer_key,
                 client_secret=consumer_secret,
                 callback_uri=callback_url)
-            r = requests.post(self.url('REQUEST_TOKEN'), auth=oauth)
+            r = self.session.post(self.url('REQUEST_TOKEN'), auth=oauth)
             if r.status_code == 200:
                 creds = parse_qs(r.content)
 
@@ -187,7 +189,7 @@ class Bitbucket(object):
             resource_owner_key=self.access_token,
             resource_owner_secret=self.access_token_secret,
             verifier=verifier)
-        r = requests.post(self.url('ACCESS_TOKEN'), auth=oauth)
+        r = self.session.post(self.url('ACCESS_TOKEN'), auth=oauth)
         if r.status_code == 200:
             creds = parse_qs(r.content)
         else:
@@ -224,8 +226,7 @@ class Bitbucket(object):
             auth=auth,
             params=params,
             data=kwargs)
-        s = Session()
-        resp = s.send(r.prepare())
+        resp = self.session.send(r.prepare())
         status = resp.status_code
         text = resp.text
         error = resp.reason
